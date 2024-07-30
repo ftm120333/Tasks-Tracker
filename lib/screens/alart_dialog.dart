@@ -1,20 +1,28 @@
 import 'package:flutter/material.dart';
 
 import '../app_config.dart';
-import '../models/task_models.dart';
 
 showLoaderVersionAlart(
-    BuildContext context, String title, List<Method> methods) {
+    BuildContext context, String title, String msg, onConfirm) {
   var alert = AlertDialog(
     title: Text(
-      " ",
+      title,
       style: Res.textStyleDarkGrey,
     ),
-    content: Text("msg"),
+    content: Text(msg),
     actions: [
       ElevatedButton(
-        onPressed: () {},
-        child: Text(""),
+        onPressed: () {
+          onConfirm();
+          Navigator.pop(context);
+        },
+        child: Text("ok"),
+      ),
+      ElevatedButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: Text("cancel"),
       ),
     ],
   );

@@ -3,11 +3,42 @@ import 'package:flutter/material.dart';
 import '../models/task_models.dart';
 import '../services/hive_db_services.dart';
 import 'add_task_widget.dart';
+import 'alart_dialog.dart';
 import 'mangage_tasks.dart';
 
-class TaskList extends StatelessWidget {
+class TaskList extends StatefulWidget {
   TaskList({super.key});
+
+  @override
+  State<TaskList> createState() => _TaskListState();
+}
+
+class _TaskListState extends State<TaskList> {
   final TaskServices _taskServices = TaskServices();
+  late Future<List<Task>> _tasks;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTasks();
+  }
+
+  void _loadTasks() {
+    setState(() {
+      _tasks = _taskServices.getAllTasks();
+    });
+  }
+
+  void _deleteTask(int id) async {
+    await _taskServices.deleteTask(id);
+    _loadTasks(); // Reload the tasks after deletion
+  }
+
+  void addTask(task) async {
+    await _taskServices.addTask(task);
+    _loadTasks(); // Reload the tasks after deletion
+  }
+
   @override
   Widget build(BuildContext context) {
     //final tasks = ref.watch(taskProvider);
@@ -18,31 +49,45 @@ class TaskList extends StatelessWidget {
       appBar: AppBar(),
       body: Column(
         children: [
-          AddTask(),
+          AddTask(addTask: addTask),
           SizedBox(
             height: size.height * 0.01,
           ),
           Expanded(
-              child: FutureBuilder(
-            future: tasks,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return ListView(
-                  children: [
-                    for (final task in snapshot.data!)
-                      TaskTile(
+            child: FutureBuilder<List<Task>>(
+              future: _tasks,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasData) {
+                  return ListView.builder(
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      final task = snapshot.data![index];
+                      return TaskTile(
                         title: task.title,
                         methods: task.taskMethods,
-                      ),
-                  ],
-                );
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
-          )),
+                        onDelete: () {
+                          showLoaderVersionAlart(
+                              context,
+                              "Deleting Task",
+                              "are you sure you want to delete this task?",
+                              () => _deleteTask(index));
+                          //_deleteTask(index);
+                        },
+                      );
+                    },
+                  );
+                } else {
+                  return const Center(
+                    child: Text('No tasks found'),
+                  );
+                }
+              },
+            ),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -50,7 +95,7 @@ class TaskList extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => MnageTasksCounter(),
+              builder: (context) => const MnageTasksCounter(),
             ),
           );
         },
@@ -63,13 +108,24 @@ class TaskList extends StatelessWidget {
 class TaskTile extends StatelessWidget {
   String title;
   List<Method> methods;
+  Function() onDelete;
 
-  TaskTile({super.key, required this.title, required this.methods});
+  TaskTile(
+      {super.key,
+      required this.title,
+      required this.methods,
+      required this.onDelete});
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(title),
+      leading: IconButton(
+        onPressed: () {
+          onDelete();
+        },
+        icon: const Icon(Icons.delete),
+      ),
       subtitle: Column(
         children: [
           Row(
@@ -78,18 +134,18 @@ class TaskTile extends StatelessWidget {
                 Row(
                   children: [
                     Text(method.name),
-                    SizedBox(
-                      width: 10,
+                    const SizedBox(
+                      width: 5,
                     ),
                     Text(method.counter.toString()),
-                    SizedBox(
-                      width: 10,
+                    const SizedBox(
+                      width: 5,
                     ),
                   ],
                 )
             ],
           ),
-          Divider(),
+          const Divider(),
         ],
       ),
     );

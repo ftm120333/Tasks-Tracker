@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../app_config.dart';
 import '../models/task_models.dart';
-import '../services/hive_db_services.dart';
 
 class AddTask extends StatefulWidget {
-  const AddTask({super.key});
+  final Function addTask;
+  AddTask({required this.addTask});
 
   @override
   State<AddTask> createState() => _AddTaskState();
@@ -18,7 +18,7 @@ bool isbyEmail = false;
 
 class _AddTaskState extends State<AddTask> {
   TextEditingController textController = TextEditingController();
-  final TaskServices _taskServices = TaskServices();
+
   @override
   void dispose() {
     textController.dispose();
@@ -118,7 +118,7 @@ class _AddTaskState extends State<AddTask> {
           onPressed: () {
             String title = textController.text;
             if (title.isNotEmpty) {
-              _taskServices.addTask(Task(title: title, taskMethods: [
+              widget.addTask(Task(title: title, taskMethods: [
                 if (isbyCall) Method(name: "call", counter: 0),
                 if (isbyHelpDesk) Method(name: "helpDesk", counter: 0),
                 if (isbyItsm) Method(name: "itsm", counter: 0),
