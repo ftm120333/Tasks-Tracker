@@ -1,14 +1,13 @@
 import 'package:hive/hive.dart';
-import 'package:uuid/uuid.dart';
+
 
 part 'task_models.g.dart';
 
-Uuid uuid = const Uuid();
+
 
 @HiveType(typeId: 1)
-class Task {
-  @HiveField(0)
-  String id = uuid.v4();
+class Task extends HiveObject{
+
 
   @HiveField(1)
   String title;
@@ -17,6 +16,8 @@ class Task {
   List<Method> taskMethods;
 
   Task({required this.title, required this.taskMethods});
+
+
 }
 
 @HiveType(typeId: 2)

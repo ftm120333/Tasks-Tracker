@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:task_counter/screens/mangage_tasks.dart';
 import 'package:task_counter/screens/task_list.dart';
 
 import 'models/task_models.dart';
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: TaskList(),
+      home: ManageTasksCounter(),
     );
   }
 }

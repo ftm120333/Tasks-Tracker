@@ -8,9 +8,10 @@ class TaskServices {
   Future<Box<Task>> get _box async => await Hive.openBox<Task>(_boxName);
 
 //create
-  Future<void> addTask(Task task) async {
+  Future<int> addTask(Task task) async {
     var box = await _box;
-    await box.add(task);
+    int id = await box.add(task);
+    return id;
   }
 
 //read

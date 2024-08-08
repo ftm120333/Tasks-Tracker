@@ -95,7 +95,7 @@ class _TaskListState extends State<TaskList> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const MnageTasksCounter(),
+              builder: (context) => const ManageTasksCounter(),
             ),
           );
         },
