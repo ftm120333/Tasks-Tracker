@@ -4,6 +4,7 @@ import '../models/task_models.dart';
 import '../services/hive_db_services.dart';
 import 'add_task_widget.dart';
 import 'alart_dialog.dart';
+import 'drawer.dart';
 import 'mangage_tasks.dart';
 
 class TaskList extends StatefulWidget {
@@ -46,6 +47,7 @@ class _TaskListState extends State<TaskList> {
     var size = MediaQuery.of(context).size;
     print(tasks);
     return Scaffold(
+      drawer: const TaskDrawer(),
       appBar: AppBar(),
       body: Column(
         children: [
@@ -68,7 +70,6 @@ class _TaskListState extends State<TaskList> {
                       final task = snapshot.data![index];
                       return TaskTile(
                         title: task.title,
-                        methods: task.taskMethods,
                         onDelete: () {
                           showLoaderVersionAlart(
                               context,
@@ -106,47 +107,43 @@ class _TaskListState extends State<TaskList> {
 }
 
 class TaskTile extends StatelessWidget {
-  String title;
-  List<Method> methods;
-  Function() onDelete;
+  final String title;
+  final Function() onDelete;
 
-  TaskTile(
-      {super.key,
-      required this.title,
-      required this.methods,
-      required this.onDelete});
+  const TaskTile({
+    Key? key,
+    required this.title,
+    required this.onDelete,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(title),
-      leading: IconButton(
-        onPressed: () {
-          onDelete();
-        },
-        icon: const Icon(Icons.delete),
-      ),
-      subtitle: Column(
-        children: [
-          Row(
-            children: [
-              for (var method in methods)
-                Row(
-                  children: [
-                    Text(method.name),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Text(method.counter.toString()),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                  ],
-                )
-            ],
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+      decoration: BoxDecoration(
+        color: Colors.grey[850],
+        borderRadius: BorderRadius.circular(12.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 8.0,
+            offset: Offset(0, 4),
           ),
-          const Divider(),
         ],
+      ),
+      child: ListTile(
+        contentPadding: EdgeInsets.all(12.0),
+        leading: IconButton(
+          onPressed: onDelete,
+          icon: const Icon(Icons.delete, color: Colors.redAccent),
+        ),
+        title: Text(
+          title,
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
     );
   }

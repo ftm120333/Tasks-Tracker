@@ -1,14 +1,9 @@
 import 'package:hive/hive.dart';
 
-
-part 'task_models.g.dart';
-
-
+part "task_models.g.dart";
 
 @HiveType(typeId: 1)
-class Task extends HiveObject{
-
-
+class Task extends HiveObject {
   @HiveField(1)
   String title;
 
@@ -16,8 +11,6 @@ class Task extends HiveObject{
   List<Method> taskMethods;
 
   Task({required this.title, required this.taskMethods});
-
-
 }
 
 @HiveType(typeId: 2)
