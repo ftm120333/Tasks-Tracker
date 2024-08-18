@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 import '../models/task_models.dart'; // Update with your actual path
 
@@ -19,12 +20,16 @@ class TaskItemWidget extends StatefulWidget {
 class _TaskItemWidgetState extends State<TaskItemWidget> {
   bool _isExpanded = false;
 
+  void _updateTaskInHive() async {
+    final box = await Hive.openBox<Task>('tasksBox');
+    await box.put(widget.taskKey, widget.task);
+  }
+
   void _incrementMethodCounter(int index) {
     setState(() {
       widget.task.taskMethods[index].counter++;
     });
-    // Update your task data here
-    // Example: _taskServices.updateTask(widget.taskKey, widget.task);
+    _updateTaskInHive();
   }
 
   void _decrementMethodCounter(int index) {
@@ -33,8 +38,7 @@ class _TaskItemWidgetState extends State<TaskItemWidget> {
         widget.task.taskMethods[index].counter--;
       }
     });
-    // Update your task data here
-    // Example: _taskServices.updateTask(widget.taskKey, widget.task);
+    _updateTaskInHive();
   }
 
   @override
