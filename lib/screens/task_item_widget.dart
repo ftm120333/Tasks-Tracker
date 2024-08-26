@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
+import '../app_config.dart';
 import '../models/task_models.dart'; // Update with your actual path
 
 class TaskItemWidget extends StatefulWidget {
@@ -45,103 +46,76 @@ class _TaskItemWidgetState extends State<TaskItemWidget> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.grey[850],
-          borderRadius: BorderRadius.circular(12.0),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 8.0,
-              offset: const Offset(0, 4),
-            ),
-          ],
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.white,
+          backgroundColor: Res.kPrimaryColor, // Text color
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          padding: const EdgeInsets.all(16.0),
         ),
+        onPressed: () {
+          setState(() {
+            _isExpanded = !_isExpanded;
+          });
+        },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.teal, // Text color
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
-                padding: const EdgeInsets.all(16.0),
-              ),
-              onPressed: () {
-                setState(() {
-                  _isExpanded = !_isExpanded;
-                });
-              },
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.task.title,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  if (_isExpanded)
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ...widget.task.taskMethods.asMap().entries.map((entry) {
-                          final i = entry.key;
-                          final method = entry.value;
-                          return Container(
-                            margin: const EdgeInsets.only(top: 8.0),
-                            padding: const EdgeInsets.all(12.0),
-                            decoration: BoxDecoration(
-                              color: Colors.teal[100], // Background color
-                              borderRadius: BorderRadius.circular(8.0),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
-                                  blurRadius: 4.0,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  method.name,
-                                  style: TextStyle(color: Colors.teal[900]),
-                                ),
-                                Text(
-                                  method.counter.toString(),
-                                  style: TextStyle(color: Colors.teal[900]),
-                                ),
-                                Row(
-                                  children: [
-                                    IconButton(
-                                      onPressed: () =>
-                                          _decrementMethodCounter(i),
-                                      icon: const Icon(Icons.remove,
-                                          color: Colors.teal),
-                                    ),
-                                    IconButton(
-                                      onPressed: () =>
-                                          _incrementMethodCounter(i),
-                                      icon: const Icon(Icons.add,
-                                          color: Colors.teal),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          );
-                        }).toList(),
-                        const SizedBox(height: 8.0),
-                      ],
-                    ),
-                ],
+            Text(
+              widget.task.title,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
               ),
             ),
+            if (_isExpanded)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ...widget.task.taskMethods.asMap().entries.map((entry) {
+                    final i = entry.key;
+                    final method = entry.value;
+                    return Container(
+                      margin: const EdgeInsets.only(top: 8.0),
+                      padding: const EdgeInsets.all(12.0),
+                      decoration: BoxDecoration(
+                        color:
+                            Res.whiteColor.withOpacity(0.7), // Background color
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            method.name,
+                            style: TextStyle(color: Res.kPrimaryColor),
+                          ),
+                          Text(
+                            method.counter.toString(),
+                            style: TextStyle(color: Res.kPrimaryColor),
+                          ),
+                          Row(
+                            children: [
+                              IconButton(
+                                onPressed: () => _decrementMethodCounter(i),
+                                icon: Icon(Icons.remove,
+                                    color: Res.kPrimaryColor),
+                              ),
+                              IconButton(
+                                onPressed: () => _incrementMethodCounter(i),
+                                icon: Icon(Icons.add, color: Res.kPrimaryColor),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                  const SizedBox(height: 8.0),
+                ],
+              ),
           ],
         ),
       ),

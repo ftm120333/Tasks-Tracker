@@ -7,11 +7,21 @@ showLoaderVersionAlart(
   var alert = AlertDialog(
     title: Text(
       title,
+      style: Res.textStyleBoldDarkGrey,
+    ),
+    content: Text(
+      msg,
       style: Res.textStyleDarkGrey,
     ),
-    content: Text(msg),
     actions: [
       ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Res.kPrimaryColor,
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
         onPressed: () {
           onConfirm();
           Navigator.pop(context);
@@ -19,6 +29,13 @@ showLoaderVersionAlart(
         child: Text("ok"),
       ),
       ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Res.kPrimaryColor,
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
         onPressed: () {
           Navigator.pop(context);
         },

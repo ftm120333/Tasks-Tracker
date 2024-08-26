@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:task_counter/screens/mangage_tasks.dart';
-import 'package:task_counter/screens/task_list.dart';
+
 
 import 'models/task_models.dart';
 
@@ -13,7 +13,6 @@ void main() async {
   runApp(const MyApp());
 }
 
-//https://medium.com/@beccasaka/using-sqlite-in-flutter-3d5a10138090
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -27,7 +26,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: ManageTasksCounter(),
+      home: const ManageTasksCounter(),
     );
   }
 }

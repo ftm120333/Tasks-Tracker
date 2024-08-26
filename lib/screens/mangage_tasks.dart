@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_extend/share_extend.dart';
 import 'package:task_counter/screens/task_item_widget.dart';
 
+import '../app_config.dart';
 import '../models/task_models.dart';
 import '../services/hive_db_services.dart';
 import 'alart_dialog.dart';
@@ -78,9 +79,12 @@ class _ManageTasksCounterState extends State<ManageTasksCounter> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: TaskDrawer(),
+      drawer: const TaskDrawer(),
       appBar: AppBar(
-        title: const Text('Manage Tasks Counter'),
+        title: Text(
+          'Manage Tasks Counter',
+          style: Res.titleStyle,
+        ),
         actions: [
           IconButton(
               icon: const Icon(Icons.refresh),
@@ -100,17 +104,19 @@ class _ManageTasksCounterState extends State<ManageTasksCounter> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             var tasks = snapshot.data!;
-            return ListView.builder(
-              itemCount: tasks.length,
-              itemBuilder: (context, index) {
-                final task = tasks[index];
-                final taskKey = task.key as int;
+            return Center(
+              child: ListView.builder(
+                itemCount: tasks.length,
+                itemBuilder: (context, index) {
+                  final task = tasks[index];
+                  final taskKey = task.key as int;
 
-                return TaskItemWidget(
-                  task: task,
-                  taskKey: taskKey,
-                );
-              },
+                  return TaskItemWidget(
+                    task: task,
+                    taskKey: taskKey,
+                  );
+                },
+              ),
             );
           } else if (snapshot.hasError) {
             return Center(
@@ -124,15 +130,21 @@ class _ManageTasksCounterState extends State<ManageTasksCounter> {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Res.whiteColor,
         onPressed: () {
           createAndShareExcel();
         },
-        child: const Icon(Icons.table_chart),
+        child: Icon(
+          Icons.table_chart,
+          color: Res.kPrimaryColor,
+        ),
       ),
     );
   }
 
+  //This function is to create an excel data of the task counters
   Future<void> createAndShareExcel() async {
+    //get data from Hive DB
     List<Task> tasks = await _taskServices.getAllTasks();
     var excel = Excel.createExcel();
     var sheet = excel['Sheet1'];
@@ -155,12 +167,10 @@ class _ManageTasksCounterState extends State<ManageTasksCounter> {
       // Create a list of cell values starting with the task title
       var row = <CellValue>[TextCellValue(task.title)];
 
-      // Create a map to easily access method counters by name
       var methodCounterMap = {
         for (var method in task.taskMethods) method.name: method.counter
       };
 
-      // Add method counters for each header method name
       for (var header in headers.skip(1)) {
         // Skip the first header as it is "Task Name"
         row.add(IntCellValue(methodCounterMap[header] ??
@@ -175,10 +185,10 @@ class _ManageTasksCounterState extends State<ManageTasksCounter> {
     final excelFilePath =
         '${(await getTemporaryDirectory()).path}/taskCounter.xlsx';
     final excelFile = File(excelFilePath)..writeAsBytesSync(excelBytes!);
-
+    DateTime today = DateTime.now();
     // Share the Excel file using the share_extend package
     await ShareExtend.share(excelFile.path, 'file',
         subject: "Task counter",
-        extraText: "These are the task counters for this month");
+        extraText: "These are the task counters for $today");
   }
 }

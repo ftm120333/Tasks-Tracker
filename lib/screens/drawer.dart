@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:task_counter/screens/task_list.dart';
 
+import '../app_config.dart';
 import 'mangage_tasks.dart';
 
 class TaskDrawer extends StatelessWidget {
@@ -10,14 +11,31 @@ class TaskDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
         child: ListView(padding: EdgeInsets.zero, children: [
-      const DrawerHeader(
+      DrawerHeader(
         decoration: BoxDecoration(
-          color: Colors.teal,
+          color: Res.kPrimaryColor,
         ),
-        child: Text('Manage Tasks Counter'),
+        child: Center(
+          child: Column(
+            children: [
+              Text(
+                'Manage Tasks Counter',
+                style: Res.textStyleNormalWhiteLLS,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Image.asset(
+                Res.appIcon,
+                width: 50,
+              )
+            ],
+          ),
+        ),
       ),
       ListTile(
         title: const Text('tasks dashboard'),
+        leading: Icon(Icons.home),
         onTap: () {
           Navigator.pop(context);
           Navigator.pushReplacement(context,
@@ -27,6 +45,7 @@ class TaskDrawer extends StatelessWidget {
         },
       ),
       ListTile(
+        leading: Icon(Icons.add_outlined),
         title: const Text('manage tasks'),
         onTap: () {
           Navigator.pop(context);

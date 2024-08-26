@@ -20,6 +20,7 @@ abstract class Res {
   static const double smallIconSize = 24;
 
   ///Icons
+  static const String appIcon = "assets/appIcon.png";
 
   ///Colors
   static final HexColor kPrimaryColor = HexColor("#11294B");
@@ -39,7 +40,7 @@ abstract class Res {
 
   ///Fonts
 
-  static TextStyle TitleStyle = TextStyle(
+  static TextStyle titleStyle = TextStyle(
       color: Res.blackColor,
       fontSize: Res.subTitleFontSize,
       fontWeight: FontWeight.bold);
