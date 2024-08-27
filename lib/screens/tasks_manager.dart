@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../app_config.dart';
 import '../models/task_models.dart';
 import '../services/hive_db_services.dart';
-import 'add_task_widget.dart';
-import 'alart_dialog.dart';
-import 'drawer.dart';
-import 'mangage_tasks.dart';
+import 'components/add_task_widget.dart';
+import 'components/alart_dialog.dart';
+import 'components/drawer.dart';
 
 class TaskList extends StatefulWidget {
   TaskList({super.key});
@@ -48,7 +48,9 @@ class _TaskListState extends State<TaskList> {
     print(tasks);
     return Scaffold(
       drawer: const TaskDrawer(),
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text("Tasks Mangers"),
+      ),
       body: Column(
         children: [
           AddTask(addTask: addTask),
@@ -91,17 +93,6 @@ class _TaskListState extends State<TaskList> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const ManageTasksCounter(),
-            ),
-          );
-        },
-        child: const Icon(Icons.home),
-      ),
     );
   }
 }
@@ -121,25 +112,24 @@ class TaskTile extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
       decoration: BoxDecoration(
-        color: Colors.grey[850],
+        color: Res.ddGrayColor,
         borderRadius: BorderRadius.circular(12.0),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.2),
             blurRadius: 8.0,
-            offset: Offset(0, 4),
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: ListTile(
-        contentPadding: EdgeInsets.all(12.0),
         leading: IconButton(
           onPressed: onDelete,
-          icon: const Icon(Icons.delete, color: Colors.redAccent),
+          icon: Icon(Icons.delete, color: Res.sPrimaryColor),
         ),
         title: Text(
           title,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),

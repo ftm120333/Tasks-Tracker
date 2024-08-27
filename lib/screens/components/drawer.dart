@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:task_counter/screens/task_list.dart';
+import 'package:task_counter/screens/tasks_manager.dart';
 
-import '../app_config.dart';
-import 'mangage_tasks.dart';
+import '../../app_config.dart';
+import '../about.dart';
+import '../task_counters.dart';
 
 class TaskDrawer extends StatelessWidget {
   const TaskDrawer({super.key});
@@ -19,10 +20,10 @@ class TaskDrawer extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                'Manage Tasks Counter',
+                'Tasks Tracker',
                 style: Res.textStyleNormalWhiteLLS,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Image.asset(
@@ -34,8 +35,8 @@ class TaskDrawer extends StatelessWidget {
         ),
       ),
       ListTile(
-        title: const Text('tasks dashboard'),
-        leading: Icon(Icons.home),
+        title: const Text('Tasks dashboard'),
+        leading: const Icon(Icons.home),
         onTap: () {
           Navigator.pop(context);
           Navigator.pushReplacement(context,
@@ -45,13 +46,23 @@ class TaskDrawer extends StatelessWidget {
         },
       ),
       ListTile(
-        leading: Icon(Icons.add_outlined),
-        title: const Text('manage tasks'),
+        leading: const Icon(Icons.add_outlined),
+        title: const Text('Manage Tasks'),
         onTap: () {
           Navigator.pop(context);
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) {
             return TaskList();
+          }));
+        },
+      ),
+      ListTile(
+        leading: const Icon(Icons.info_outline),
+        title: const Text('About'),
+        onTap: () {
+          Navigator.pop(context);
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return const AboutTheApp();
           }));
         },
       ),

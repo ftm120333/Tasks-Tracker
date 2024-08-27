@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../app_config.dart';
-import '../models/task_models.dart';
+import '../../app_config.dart';
+import '../../models/task_models.dart';
 
 class AddTask extends StatefulWidget {
   final Function addTask;
@@ -70,7 +70,10 @@ class _AddTaskState extends State<AddTask> {
           ],
         ),
         CheckboxListTile(
-          title: Text("is by Call"),
+          activeColor: Res.kPrimaryColor,
+          checkColor: Res.whiteColor,
+
+          title: const Text("is by Call"),
           value: isbyCall,
           onChanged: (newValue) {
             setState(() {
@@ -82,7 +85,9 @@ class _AddTaskState extends State<AddTask> {
               ListTileControlAffinity.leading, //  <-- leading Checkbox
         ),
         CheckboxListTile(
-          title: Text("is by HelpDesk"),
+          activeColor: Res.kPrimaryColor,
+          checkColor: Res.whiteColor,
+          title: const Text("is by HelpDesk"),
           value: isbyHelpDesk,
           onChanged: (newValue) {
             setState(() {
@@ -93,7 +98,9 @@ class _AddTaskState extends State<AddTask> {
               ListTileControlAffinity.leading, //  <-- leading Checkbox
         ),
         CheckboxListTile(
-          title: Text("is by Itsm"),
+          activeColor: Res.kPrimaryColor,
+          checkColor: Res.whiteColor,
+          title: const Text("is by Itsm"),
           value: isbyItsm,
           onChanged: (newValue) {
             setState(() {
@@ -104,7 +111,9 @@ class _AddTaskState extends State<AddTask> {
               ListTileControlAffinity.leading, //  <-- leading Checkbox
         ),
         CheckboxListTile(
-          title: Text("is by Email"),
+          activeColor: Res.kPrimaryColor,
+          checkColor: Res.whiteColor,
+          title: const Text("is by Email"),
           value: isbyEmail,
           onChanged: (newValue) {
             setState(() {
@@ -115,6 +124,14 @@ class _AddTaskState extends State<AddTask> {
               ListTileControlAffinity.leading, //  <-- leading Checkbox
         ),
         ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Res.kPrimaryColor,
+            foregroundColor: Res.whiteColor,
+            elevation: 4,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
           onPressed: () {
             String title = textController.text;
             if (title.isNotEmpty) {
@@ -128,7 +145,7 @@ class _AddTaskState extends State<AddTask> {
               textController.clear();
             }
           },
-          child: Text("save task"),
+          child: const Text("Add Task"),
         ),
       ],
     );

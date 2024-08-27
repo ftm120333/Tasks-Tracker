@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:task_counter/screens/mangage_tasks.dart';
-
+import 'package:task_counter/screens/task_counters.dart';
 
 import 'models/task_models.dart';
 

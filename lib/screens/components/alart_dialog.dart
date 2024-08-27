@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../app_config.dart';
+import '../../app_config.dart';
 
 showLoaderVersionAlart(
     BuildContext context, String title, String msg, onConfirm) {

@@ -4,13 +4,13 @@ import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_extend/share_extend.dart';
-import 'package:task_counter/screens/task_item_widget.dart';
+import 'package:task_counter/screens/components/task_item_widget.dart';
 
 import '../app_config.dart';
 import '../models/task_models.dart';
 import '../services/hive_db_services.dart';
-import 'alart_dialog.dart';
-import 'drawer.dart';
+import 'components/alart_dialog.dart';
+import 'components/drawer.dart';
 
 class ManageTasksCounter extends StatefulWidget {
   const ManageTasksCounter({super.key});
@@ -82,7 +82,7 @@ class _ManageTasksCounterState extends State<ManageTasksCounter> {
       drawer: const TaskDrawer(),
       appBar: AppBar(
         title: Text(
-          'Manage Tasks Counter',
+          'Task Counters',
           style: Res.titleStyle,
         ),
         actions: [

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
-import '../app_config.dart';
-import '../models/task_models.dart'; // Update with your actual path
+import '../../app_config.dart';
+import '../../models/task_models.dart'; // Update with your actual path
 
 class TaskItemWidget extends StatefulWidget {
   final Task task;
