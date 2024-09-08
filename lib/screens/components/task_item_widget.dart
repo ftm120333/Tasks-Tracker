@@ -21,23 +21,26 @@ class TaskItemWidget extends StatefulWidget {
 class _TaskItemWidgetState extends State<TaskItemWidget> {
   bool _isExpanded = false;
 
-  void _updateTaskInHive() async {
-    final box = await Hive.openBox<Task>('tasksBox');
-    await box.put(widget.taskKey, widget.task);
+  Future<void> _updateTaskInHive() async {
+    try {
+      final box = await Hive.openBox<Task>('tasksBox');
+      await box.put(widget.taskKey, widget.task);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to update task: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
-  void _incrementMethodCounter(int index) {
+  void _changeMethodCounter(int index, bool increment) {
     setState(() {
-      widget.task.taskMethods[index].counter++;
-    });
-    _updateTaskInHive();
-  }
-
-  void _decrementMethodCounter(int index) {
-    setState(() {
-      if (widget.task.taskMethods[index].counter > 0) {
-        widget.task.taskMethods[index].counter--;
-      }
+      final currentCounter = widget.task.taskMethods[index].counter;
+      widget.task.taskMethods[index].counter = increment
+          ? currentCounter + 1
+          : (currentCounter > 0 ? currentCounter - 1 : 0);
     });
     _updateTaskInHive();
   }
@@ -49,7 +52,7 @@ class _TaskItemWidgetState extends State<TaskItemWidget> {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           foregroundColor: Colors.white,
-          backgroundColor: Res.kPrimaryColor, // Text color
+          backgroundColor: Res.kPrimaryColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.0),
           ),
@@ -70,55 +73,50 @@ class _TaskItemWidgetState extends State<TaskItemWidget> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            if (_isExpanded)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ...widget.task.taskMethods.asMap().entries.map((entry) {
-                    final i = entry.key;
-                    final method = entry.value;
-                    return Container(
-                      margin: const EdgeInsets.only(top: 8.0),
-                      padding: const EdgeInsets.all(12.0),
-                      decoration: BoxDecoration(
-                        color:
-                            Res.whiteColor.withOpacity(0.7), // Background color
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            method.name,
-                            style: TextStyle(color: Res.kPrimaryColor),
-                          ),
-                          Text(
-                            method.counter.toString(),
-                            style: TextStyle(color: Res.kPrimaryColor),
-                          ),
-                          Row(
-                            children: [
-                              IconButton(
-                                onPressed: () => _decrementMethodCounter(i),
-                                icon: Icon(Icons.remove,
-                                    color: Res.kPrimaryColor),
-                              ),
-                              IconButton(
-                                onPressed: () => _incrementMethodCounter(i),
-                                icon: Icon(Icons.add, color: Res.kPrimaryColor),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                  const SizedBox(height: 8.0),
-                ],
-              ),
+            if (_isExpanded) ..._buildExpandedContent(),
           ],
         ),
       ),
     );
+  }
+
+  List<Widget> _buildExpandedContent() {
+    return widget.task.taskMethods.asMap().entries.map((entry) {
+      final index = entry.key;
+      final method = entry.value;
+      return Container(
+        margin: const EdgeInsets.only(top: 8.0),
+        padding: const EdgeInsets.all(12.0),
+        decoration: BoxDecoration(
+          color: Res.whiteColor.withOpacity(0.7),
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              method.name,
+              style: TextStyle(color: Res.kPrimaryColor),
+            ),
+            Text(
+              method.counter.toString(),
+              style: TextStyle(color: Res.kPrimaryColor),
+            ),
+            Row(
+              children: [
+                IconButton(
+                  onPressed: () => _changeMethodCounter(index, false),
+                  icon: Icon(Icons.remove, color: Res.kPrimaryColor),
+                ),
+                IconButton(
+                  onPressed: () => _changeMethodCounter(index, true),
+                  icon: Icon(Icons.add, color: Res.kPrimaryColor),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    }).toList();
   }
 }

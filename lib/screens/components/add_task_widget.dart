@@ -5,7 +5,7 @@ import '../../models/task_models.dart';
 
 class AddTask extends StatefulWidget {
   final Function addTask;
-  AddTask({required this.addTask});
+  const AddTask({super.key, required this.addTask});
 
   @override
   State<AddTask> createState() => _AddTaskState();
@@ -53,7 +53,7 @@ class _AddTaskState extends State<AddTask> {
             const Text("Task title: "),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10.0),
-              child: Container(
+              child: SizedBox(
                 width: size.width * 0.57,
                 height: size.height * 0.06,
                 child: TextField(

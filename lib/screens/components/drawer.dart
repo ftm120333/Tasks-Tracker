@@ -11,61 +11,70 @@ class TaskDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-        child: ListView(padding: EdgeInsets.zero, children: [
-      DrawerHeader(
-        decoration: BoxDecoration(
-          color: Res.kPrimaryColor,
-        ),
-        child: Center(
-          child: Column(
-            children: [
-              Text(
-                'Tasks Tracker',
-                style: Res.textStyleNormalWhiteLLS,
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          DrawerHeader(
+            decoration: BoxDecoration(
+              color: Res.kPrimaryColor,
+            ),
+            child: Center(
+              child: Column(
+                children: [
+                  Text(
+                    'Tasks Tracker',
+                    style: Res.textStyleNormalWhiteLLS,
+                  ),
+                  const SizedBox(height: 10),
+                  Image.asset(
+                    Res.appIcon,
+                    width: 50,
+                  ),
+                ],
               ),
-              const SizedBox(
-                height: 10,
-              ),
-              Image.asset(
-                Res.appIcon,
-                width: 50,
-              )
-            ],
+            ),
           ),
-        ),
+          _buildDrawerItem(
+            context,
+            title: 'Tasks Dashboard',
+            icon: Icons.home,
+            onTap: () => _navigateTo(context, const ManageTasksCounter()),
+          ),
+          _buildDrawerItem(
+            context,
+            title: 'Manage Tasks',
+            icon: Icons.add_outlined,
+            onTap: () => _navigateTo(context, const TaskList()),
+          ),
+          _buildDrawerItem(
+            context,
+            title: 'About',
+            icon: Icons.info_outline,
+            onTap: () => _navigateTo(context, const AboutTheApp()),
+          ),
+        ],
       ),
-      ListTile(
-        title: const Text('Tasks dashboard'),
-        leading: const Icon(Icons.home),
-        onTap: () {
-          Navigator.pop(context);
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) {
-            return const ManageTasksCounter();
-          }));
-        },
-      ),
-      ListTile(
-        leading: const Icon(Icons.add_outlined),
-        title: const Text('Manage Tasks'),
-        onTap: () {
-          Navigator.pop(context);
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) {
-            return TaskList();
-          }));
-        },
-      ),
-      ListTile(
-        leading: const Icon(Icons.info_outline),
-        title: const Text('About'),
-        onTap: () {
-          Navigator.pop(context);
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return const AboutTheApp();
-          }));
-        },
-      ),
-    ]));
+    );
+  }
+
+  Widget _buildDrawerItem(BuildContext context,
+      {required String title,
+      required IconData icon,
+      required VoidCallback onTap}) {
+    return ListTile(
+      leading: Icon(icon),
+      title: Text(title),
+      onTap: () {
+        Navigator.pop(context);
+        onTap();
+      },
+    );
+  }
+
+  void _navigateTo(BuildContext context, Widget destination) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => destination),
+    );
   }
 }

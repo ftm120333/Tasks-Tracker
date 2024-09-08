@@ -8,7 +8,7 @@ import 'components/alart_dialog.dart';
 import 'components/drawer.dart';
 
 class TaskList extends StatefulWidget {
-  TaskList({super.key});
+  const TaskList({super.key});
 
   @override
   State<TaskList> createState() => _TaskListState();
@@ -25,47 +25,54 @@ class _TaskListState extends State<TaskList> {
   }
 
   void _loadTasks() {
-    setState(() {
-      _tasks = _taskServices.getAllTasks();
-    });
+    _tasks = _taskServices.getAllTasks();
   }
 
-  void _deleteTask(int id) async {
-    await _taskServices.deleteTask(id);
-    _loadTasks(); // Reload the tasks after deletion
+  Future<void> _deleteTask(int id) async {
+    try {
+      await _taskServices.deleteTask(id);
+      _loadTasks();
+      setState(() {}); // Trigger UI update after loading tasks
+    } catch (e) {
+      // Handle errors here
+      print('Error deleting task: $e');
+    }
   }
 
-  void addTask(task) async {
-    await _taskServices.addTask(task);
-    _loadTasks(); // Reload the tasks after deletion
+  Future<void> _addTask(Task task) async {
+    try {
+      await _taskServices.addTask(task);
+      _loadTasks();
+      setState(() {}); // Trigger UI update after loading tasks
+    } catch (e) {
+      // Handle errors here
+      print('Error adding task: $e');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    //final tasks = ref.watch(taskProvider);
-    final tasks = _taskServices.getAllTasks();
     var size = MediaQuery.of(context).size;
-    print(tasks);
     return Scaffold(
       drawer: const TaskDrawer(),
       appBar: AppBar(
-        title: const Text("Tasks Mangers"),
+        title: const Text("Task Manager"),
       ),
       body: Column(
         children: [
-          AddTask(addTask: addTask),
-          SizedBox(
-            height: size.height * 0.01,
-          ),
+          AddTask(addTask: _addTask),
+          SizedBox(height: size.height * 0.01),
           Expanded(
             child: FutureBuilder<List<Task>>(
               future: _tasks,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('No tasks found'));
+                } else {
                   return ListView.builder(
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
@@ -74,18 +81,14 @@ class _TaskListState extends State<TaskList> {
                         title: task.title,
                         onDelete: () {
                           showLoaderVersionAlart(
-                              context,
-                              "Deleting Task",
-                              "are you sure you want to delete this task?",
-                              () => _deleteTask(index));
-                          //_deleteTask(index);
+                            context,
+                            "Deleting Task",
+                            "Are you sure you want to delete this task?",
+                            () => _deleteTask(index),
+                          );
                         },
                       );
                     },
-                  );
-                } else {
-                  return const Center(
-                    child: Text('No tasks found'),
                   );
                 }
               },
@@ -102,10 +105,10 @@ class TaskTile extends StatelessWidget {
   final Function() onDelete;
 
   const TaskTile({
-    Key? key,
+    super.key,
     required this.title,
     required this.onDelete,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

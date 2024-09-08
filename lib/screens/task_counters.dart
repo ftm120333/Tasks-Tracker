@@ -23,6 +23,7 @@ class _ManageTasksCounterState extends State<ManageTasksCounter> {
   final TaskServices _taskServices = TaskServices();
   int counter = 0;
 
+  ///TODO: These are mandatory tasks that must be included in my case YOU CAN CHANGE IT
   void _addFixedTasks() async {
     List<String> fixedTasks = [
       "Account Modify",
@@ -52,9 +53,9 @@ class _ManageTasksCounterState extends State<ManageTasksCounter> {
             Method(name: "email", counter: 0),
           ],
         ));
-        setState(() {});
       }
     }
+    setState(() {});
   }
 
   void _resetAllCounters() async {
@@ -142,6 +143,7 @@ class _ManageTasksCounterState extends State<ManageTasksCounter> {
     );
   }
 
+  ///TODO: Break this function to mini functions
   //This function is to create an excel data of the task counters
   Future<void> createAndShareExcel() async {
     //get data from Hive DB
